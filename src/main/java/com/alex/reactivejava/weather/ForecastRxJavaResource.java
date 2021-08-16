@@ -31,6 +31,7 @@ import io.reactivex.Flowable;
 // https://eclipse-ee4j.github.io/jersey.github.io/documentation/3.0.0/user-guide.html
 // https://www.baeldung.com/jax-rs-reactive-client
 // https://learning.oreilly.com/library/view/java-ee-8/9781788475143/aca32671-db4a-4780-a29c-d43cc8d93d42.xhtml
+// https://eclipse-ee4j.github.io/jersey.github.io/documentation/latest/rx-client.html
 
 @Stateless
 @Path("/rxJavaForecast")

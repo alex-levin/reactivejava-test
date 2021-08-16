@@ -25,6 +25,15 @@ import com.alex.reactivejava.weather.model.Temperature;
 // http://localhost:8080/RxJavaTest/reactiveForecast
 // Response time: 10 sec
 
+//https://github.com/ReactiveX/RxJava
+//https://mvnrepository.com/artifact/io.reactivex.rxjava2/rxjava
+//RxFlowableInvokerProvider and RxFlowableInvoker are part of Jersey
+//https://mvnrepository.com/artifact/org.glassfish.jersey.core/jersey-client
+//https://eclipse-ee4j.github.io/jersey.github.io/documentation/3.0.0/user-guide.html
+//https://www.baeldung.com/jax-rs-reactive-client
+//https://learning.oreilly.com/library/view/java-ee-8/9781788475143/aca32671-db4a-4780-a29c-d43cc8d93d42.xhtml
+//https://eclipse-ee4j.github.io/jersey.github.io/documentation/latest/rx-client.html
+
 @Stateless
 @Path("/reactiveForecast")
 public class ForecastReactiveResource {
