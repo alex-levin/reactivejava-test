@@ -6,7 +6,6 @@ import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.CompletionException;
 import java.util.concurrent.CompletionStage;
 import java.util.concurrent.TimeUnit;
-import java.util.stream.Collectors;
 
 import javax.ejb.Stateless;
 import javax.ws.rs.GET;
@@ -110,30 +109,30 @@ public class ForecastReactiveResource {
 		});
 
 		CompletionStage<List<Forecast>> finalStage = locations.stream()
-				// for each location, call a service and return a CompletionStage
-				.map(location -> {
-					System.out.println(">>> Getting temperature for " + location.toString());
-					return temperatureTarget.resolveTemplate("city", location.getName()).request().rx()
-							.get(Temperature.class).thenApply(temperature -> new Forecast(location, temperature));
-				})
-				// reduce stages using thenCombine, which joins 2 stages into 1
-				.reduce(initialStage, (combinedStage, forecastStage) -> {
-					return combinedStage.thenCombine(forecastStage, (forecasts, forecast) -> {
-						forecasts.add(forecast);
-						return forecasts;
-					});
-				}, (stage1, stage2) -> null); // a combiner is not needed
+			// for each location, call a service and return a CompletionStage
+			.map(location -> {
+				System.out.println(">>> Getting temperature for " + location.toString());
+				return temperatureTarget.resolveTemplate("city", location.getName()).request().rx()
+						.get(Temperature.class).thenApply(temperature -> new Forecast(location, temperature));
+			})
+			// reduce stages using thenCombine, which joins 2 stages into 1
+			.reduce(initialStage, (combinedStage, forecastStage) -> {
+				return combinedStage.thenCombine(forecastStage, (forecasts, forecast) -> {
+					forecasts.add(forecast);
+					return forecasts;
+				});
+			}, (stage1, stage2) -> null); // a combiner is not needed
 
 		// complete the response with forecasts
 		finalStage.thenAccept(forecasts -> {
 			asyncResponse.resume(Response.ok(forecasts).build());
 		})
-				// handle an exception and complete the response with it
-				.exceptionally(e -> {
-					// unwrap the real exception if wrapped in CompletionException)
-					Throwable cause = (e instanceof CompletionException) ? e.getCause() : e;
-					asyncResponse.resume(cause);
-					return null;
-				});
+		// handle an exception and complete the response with it
+		.exceptionally(e -> {
+			// unwrap the real exception if wrapped in CompletionException)
+			Throwable cause = (e instanceof CompletionException) ? e.getCause() : e;
+			asyncResponse.resume(cause);
+			return null;
+		});
 	}
 }
